@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Repo {
+  id           String   @id @default(cuid())
+  owner        String
+  name         String
+  fullName     String   @unique
+  active       Boolean  @default(true)
+  lastIssueId  Int?
+  createdAt    DateTime @default(now())
+
+  issues       Issue[]
+}
+
+model Issue {
+  id             String   @id @default(cuid())
+  githubIssueId  Int      @unique
+  title          String
+  url            String
+  issueNumber    Int
+  author         String
+  labels         String[]
+
+  repoId         String
+  repo           Repo     @relation(fields: [repoId], references: [id])
+
+  createdAt      DateTime
+  notified       Boolean  @default(false)
+}
