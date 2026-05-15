@@ -21,7 +21,7 @@ model Repo {
 
 model Issue {
   id             String   @id @default(cuid())
-  githubIssueId  Int      @unique
+  githubIssueId BigInt @unique
   title          String
   url            String
   issueNumber    Int

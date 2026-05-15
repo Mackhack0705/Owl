@@ -40,29 +40,74 @@ export async function pollRepositories() {
   })
 
   for (const repo of repos) {
-    const issues = await fetchIssues(repo.owner, repo.name)
+    console.log(`Checking repo: ${repo.fullName}`)
+
+    const issues = await fetchIssues(
+      repo.owner,
+      repo.name
+    )
+
+    console.log(
+      `Fetched ${issues.length} issues`
+    )
 
     for (const issue of issues) {
-      const exists = await prisma.issue.findUnique({
-        where: {
-          githubIssueId: issue.id
-        }
-      })
+      if (issue.pull_request) continue
 
-      if (exists) continue
+      console.log(
+        `Processing issue: ${issue.title}`
+      )
+
+      const exists =
+        await prisma.issue.findUnique({
+          where: {
+            githubIssueId: BigInt(issue.id)
+          }
+        })
+
+      if (exists) {
+        console.log("Issue already exists")
+        continue
+      }
+
+      const issueCreatedAt = new Date(issue.created_at)
+      const now = new Date()
+
+      const diffMinutes =
+        (now.getTime() - issueCreatedAt.getTime()) /
+        1000 /
+        60
+
+      if (diffMinutes > 10) {
+        console.log(
+          "Skipping old issue notification"
+        )
+
+        continue
+      }
+
+      console.log("Creating issue")
 
       await prisma.issue.create({
         data: {
-          githubIssueId: issue.id,
+          githubIssueId: BigInt(issue.id),
           title: issue.title,
           url: issue.html_url,
           issueNumber: issue.number,
           author: issue.user.login,
-          labels: issue.labels.map((l: any) => l.name),
+          labels: issue.labels.map(
+            (l: any) => l.name
+          ),
           repoId: repo.id,
-          createdAt: new Date(issue.created_at)
+          createdAt: new Date(
+            issue.created_at
+          )
         }
       })
+
+      console.log(
+        "Sending Telegram notification"
+      )
 
       await sendTelegramMessage(
         `🚨 New Issue\n\nRepo: ${repo.fullName}\nIssue: ${issue.title}\n${issue.html_url}`
