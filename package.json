@@ -1,0 +1,31 @@
+{
+  "name": "subroot",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "turbo": "^2.9.14",
+    "typescript": "5.9.2"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.8.0",
+    "axios": "^1.16.1",
+    "bullmq": "^5.76.8",
+    "dotenv": "^17.4.2",
+    "ioredis": "^5.10.1",
+    "node-cron": "^4.2.1",
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.0",
+    "zod": "^4.4.3"
+  }
+}
