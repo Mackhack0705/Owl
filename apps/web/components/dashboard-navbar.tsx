@@ -11,7 +11,7 @@ export function DashboardNavbar() {
       animate={{ opacity: 1, y: 0 }}
       className="sticky top-0 z-50 border-b border-zinc-800 bg-black/70 backdrop-blur-xl"
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 m-auto border-red-500">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 border-red-500">
         <div className="flex items-center gap-3">
           <div className="rounded-xl bg-white p-2 text-black">
             <SiGithub className="h-5 w-5" />
