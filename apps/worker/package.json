@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
-    "build": "prisma generate && tsc"
+   "build": "prisma generate --schema=../../prisma/schema.prisma && tsc"
   },
   "devDependencies": {
     "@types/node": "^22.15.3"
