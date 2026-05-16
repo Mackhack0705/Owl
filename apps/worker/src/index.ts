@@ -1,6 +1,6 @@
 import "dotenv/config"
 import cron from "node-cron"
-import { pollRepositories } from "./pollRepos"
+import { pollRepositories } from "./pollRepos.js"
 
 console.log("Worker started")
 
