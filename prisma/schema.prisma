@@ -27,6 +27,9 @@ model Issue {
   issueNumber    Int
   author         String
   labels         String[]
+  hasLinkedPr    Boolean @default(false)
+  linkedPrUrl    String?
+  linkedPrState  String?
 
   repoId         String
   repo           Repo     @relation(fields: [repoId], references: [id])

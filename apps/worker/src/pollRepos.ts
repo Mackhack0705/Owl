@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client"
+import { findLinkedPr } from "./github.js"
 
 const prisma = new PrismaClient()
 
@@ -70,6 +71,12 @@ export async function pollRepositories() {
         continue
       }
 
+      const linkedPr = await findLinkedPr(
+        repo.owner,
+        repo.name,
+        issue.number
+      )
+
       const issueCreatedAt = new Date(issue.created_at)
       const now = new Date()
 
@@ -98,6 +105,9 @@ export async function pollRepositories() {
           labels: issue.labels.map(
             (l: any) => l.name
           ),
+          hasLinkedPr: !!linkedPr,
+          linkedPrUrl: linkedPr?.html_url || null,
+          linkedPrState: linkedPr?.state || null,
           repoId: repo.id,
           createdAt: new Date(
             issue.created_at

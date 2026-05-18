@@ -13,6 +13,9 @@ type Issue = {
   author: string
   createdAt: string
   labels: string[]
+  hasLinkedPr: boolean
+  linkedPrUrl: string
+  linkedPrState: string
   repo: {
     fullName: string
   }
@@ -87,6 +90,14 @@ export function IssueFeed() {
                   </Badge>
                 ))}
               </div>
+
+              {
+                issue.hasLinkedPr && (
+                  <Badge className="bg-yellow-500/20 text-yellow-400">
+                    Has PR
+                  </Badge>
+                )
+              }
             </div>
 
             <ExternalLink className="mt-1 h-4 w-4 text-zinc-500" />
