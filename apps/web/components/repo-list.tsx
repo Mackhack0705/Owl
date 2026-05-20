@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Pause, Play } from "lucide-react"
+import { Pause, Play, Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SiGithub } from "react-icons/si"
@@ -84,17 +84,28 @@ export function RepoList() {
               </div>
             </div>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => toggleRepo(repo.id)}
-            >
-              {repo.active ? (
-                <Pause className="h-4 w-4 text-yellow-400" />
-              ) : (
-                <Play className="h-4 w-4 text-emerald-400" />
-              )}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => toggleRepo(repo.id)}
+              >
+                {repo.active ? (
+                  <Pause className="h-4 w-4 text-yellow-400" />
+                ) : (
+                  <Play className="h-4 w-4 text-emerald-400" />
+                )}
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => deleteRepo(repo.id)}
+                className="opacity-0 transition group-hover:opacity-100"
+              >
+                <Trash2 className="h-4 w-4 text-red-400" />
+              </Button>
+            </div>
           </div>
         </motion.div>
       ))}
