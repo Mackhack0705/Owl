@@ -32,7 +32,7 @@ model Issue {
   linkedPrState  String?
 
   repoId         String
-  repo           Repo     @relation(fields: [repoId], references: [id])
+  repo           Repo     @relation(fields: [repoId], references: [id], onDelete: Cascade)
 
   createdAt      DateTime
   notified       Boolean  @default(false)
