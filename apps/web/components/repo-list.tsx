@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Trash2 } from "lucide-react"
+import { Pause, Play } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SiGithub } from "react-icons/si"
@@ -10,6 +10,7 @@ import { SiGithub } from "react-icons/si"
 type Repo = {
   id: string
   fullName: string
+  active: boolean
 }
 
 export function RepoList() {
@@ -35,6 +36,17 @@ export function RepoList() {
     fetchRepos()
   }, [])
 
+  async function toggleRepo(id: string) {
+    await fetch(
+      `/api/repos/${id}/toggle`,
+      {
+        method: "PATCH"
+      }
+    )
+
+    fetchRepos()
+  }
+
   return (
     <div className="space-y-4">
       {repos.map((repo, index) => (
@@ -58,10 +70,15 @@ export function RepoList() {
 
                 <div className="mt-2 flex items-center gap-2">
                   <Badge
-                    variant="secondary"
-                    className="bg-emerald-500/20 text-emerald-400"
+                    className={
+                      repo.active
+                        ? "bg-emerald-500/20 text-emerald-400"
+                        : "bg-yellow-500/20 text-yellow-400"
+                    }
                   >
-                    Active
+                    {repo.active
+                      ? "Active"
+                      : "Paused"}
                   </Badge>
                 </div>
               </div>
@@ -70,10 +87,13 @@ export function RepoList() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => deleteRepo(repo.id)}
-              className="opacity-0 transition group-hover:opacity-100"
+              onClick={() => toggleRepo(repo.id)}
             >
-              <Trash2 className="h-4 w-4 text-red-400" />
+              {repo.active ? (
+                <Pause className="h-4 w-4 text-yellow-400" />
+              ) : (
+                <Play className="h-4 w-4 text-emerald-400" />
+              )}
             </Button>
           </div>
         </motion.div>
