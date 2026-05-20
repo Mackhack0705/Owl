@@ -9,6 +9,50 @@ import { SiGithub } from "react-icons/si"
 export function AddRepoForm() {
   const [url, setUrl] = useState("")
   const [loading, setLoading] = useState(false)
+  const [repoLabels, setRepoLabels]
+    = useState<any[]>([])
+
+  const [
+    selectedLabels,
+    setSelectedLabels
+  ] = useState<string[]>([])
+
+  const [
+    loadingLabels,
+    setLoadingLabels
+  ] = useState(false)
+
+  async function fetchLabels() {
+    if (!url) return
+
+    setLoadingLabels(true)
+
+    try {
+      const response =
+        await fetch(
+          "/api/github/labels",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body: JSON.stringify({
+              url
+            })
+          }
+        )
+
+      const data =
+        await response.json()
+
+      setRepoLabels(data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoadingLabels(false)
+    }
+  }
 
   async function handleSubmit(
     e: React.FormEvent
@@ -24,11 +68,14 @@ export function AddRepoForm() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          url
+          url,
+          trackedLabels: selectedLabels
         })
       })
 
       setUrl("")
+      setRepoLabels([])
+      setSelectedLabels([])
 
       window.location.reload()
     } catch (error) {
@@ -60,13 +107,77 @@ export function AddRepoForm() {
         </div>
 
         <Button
+          type="button"
+          variant="secondary"
+          onClick={fetchLabels}
+          disabled={loadingLabels}
+          className="h-12"
+        >
+          {loadingLabels
+            ? "Fetching..."
+            : "Fetch Labels"}
+        </Button>
+
+        <Button
           disabled={loading}
           className="h-12 rounded-xl bg-white px-8 text-black hover:bg-zinc-200"
-        >
+          >
           {loading
             ? "Adding Repository..."
             : "Track Repository"}
         </Button>
+
+        {
+          repoLabels.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {repoLabels.map(
+                (label) => {
+                  const selected =
+                    selectedLabels.includes(
+                      label.name
+                    )
+    
+                  return (
+                    <button
+                      key={label.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedLabels(
+                          (prev) =>
+                            selected
+                              ? prev.filter(
+                                (l) =>
+                                  l !==
+                                  label.name
+                              )
+                              : [
+                                ...prev,
+                                label.name
+                              ]
+                        )
+                      }}
+                      className={`
+                        rounded-full
+                        border
+                        px-3
+                        py-1
+                        text-sm
+                        transition
+                        ${
+                                selected
+                                  ? "bg-white text-black"
+                                  : "border-zinc-700 bg-zinc-900 text-white"
+                        }
+                      `}
+                    >
+                      {label.name}
+                    </button>
+                  )
+                }
+              )}
+            </div>
+          )
+        }
       </div>
     </motion.form>
   )

@@ -55,6 +55,28 @@ export async function pollRepositories() {
     for (const issue of issues) {
       if (issue.pull_request) continue
 
+      const issueLabels =
+        issue.labels.map(
+          (label: any) => label.name
+        )
+
+      const shouldTrack =
+        repo.trackedLabels.length === 0 ||
+        repo.trackedLabels.some(
+          (trackedLabel) =>
+            issueLabels.includes(
+              trackedLabel
+            )
+        )
+
+      if (!shouldTrack) {
+        console.log(
+          `Skipping issue due to label filter`
+        )
+
+        continue
+      }
+
       console.log(
         `Processing issue: ${issue.title}`
       )

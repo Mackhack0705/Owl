@@ -13,6 +13,7 @@ model Repo {
   name         String
   fullName     String   @unique
   active       Boolean  @default(true)
+  trackedLabels String[]
   lastIssueId  Int?
   createdAt    DateTime @default(now())
 

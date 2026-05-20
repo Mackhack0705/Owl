@@ -16,6 +16,9 @@ export async function POST(req: NextRequest) {
 
   const githubUrl = body.url
 
+  const trackedLabels =
+    body.trackedLabels || []
+
   const split = githubUrl
     .replace("https://github.com/", "")
     .split("/")
@@ -34,13 +37,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(existing)
   }
 
-  const created = await prisma.repo.create({
-    data: {
-      owner,
-      name: repo,
-      fullName: `${owner}/${repo}`
-    }
-  })
+  const created =
+    await prisma.repo.create({
+      data: {
+        owner,
+        name: repo,
+        fullName: `${owner}/${repo}`,
+        trackedLabels
+      }
+    })
 
   return NextResponse.json(created)
 }
