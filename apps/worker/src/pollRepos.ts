@@ -27,7 +27,8 @@ async function sendTelegramMessage(message: string) {
       },
       body: JSON.stringify({
         chat_id: process.env.TELEGRAM_CHAT_ID,
-        text: message
+        text: message,
+        parse_mode: "HTML"
       })
     }
   )
@@ -137,13 +138,50 @@ export async function pollRepositories() {
         }
       })
 
+      const labels =
+        issue.labels
+          .map(
+            (label: any) => label.name
+          )
+          .join(" • ")
+
+      const createdAt =
+        new Date(
+          issue.created_at
+        ).toLocaleString()
+
+      const message = `
+      🚨 <b>New Open Source Issue</b>
+
+      📦 <b>Repo:</b>
+      ${repo.fullName}
+
+      🏷 <b>Labels:</b>
+      ${labels || "No labels"}
+
+      📝 <b>Title:</b>
+      ${issue.title}
+
+      👤 <b>Author:</b>
+      ${issue.user.login}
+
+      💬 <b>Comments:</b>
+      ${issue.comments}
+
+      🔗 <a href="${issue.html_url}">
+        Open Issue
+      </a>
+
+      ⏰ <b>Created:</b>
+      ${createdAt}
+      `
+
       console.log(
         "Sending Telegram notification"
       )
 
-      await sendTelegramMessage(
-        `🚨 New Issue\n\nRepo: ${repo.fullName}\nIssue: ${issue.title}\n${issue.html_url}`
-      )
+      await sendTelegramMessage(message)
+
     }
   }
 }
