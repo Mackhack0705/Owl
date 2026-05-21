@@ -107,18 +107,6 @@ export function AddRepoForm() {
         </div>
 
         <Button
-          type="button"
-          variant="secondary"
-          onClick={fetchLabels}
-          disabled={loadingLabels}
-          className="h-12"
-        >
-          {loadingLabels
-            ? "Fetching..."
-            : "Fetch Labels"}
-        </Button>
-
-        <Button
           disabled={loading}
           className="h-12 rounded-xl bg-white px-8 text-black hover:bg-zinc-200"
           >
@@ -126,58 +114,6 @@ export function AddRepoForm() {
             ? "Adding Repository..."
             : "Track Repository"}
         </Button>
-
-        {
-          repoLabels.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {repoLabels.map(
-                (label) => {
-                  const selected =
-                    selectedLabels.includes(
-                      label.name
-                    )
-    
-                  return (
-                    <button
-                      key={label.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedLabels(
-                          (prev) =>
-                            selected
-                              ? prev.filter(
-                                (l) =>
-                                  l !==
-                                  label.name
-                              )
-                              : [
-                                ...prev,
-                                label.name
-                              ]
-                        )
-                      }}
-                      className={`
-                        rounded-full
-                        border
-                        px-3
-                        py-1
-                        text-sm
-                        transition
-                        ${
-                                selected
-                                  ? "bg-white text-black"
-                                  : "border-zinc-700 bg-zinc-900 text-white"
-                        }
-                      `}
-                    >
-                      {label.name}
-                    </button>
-                  )
-                }
-              )}
-            </div>
-          )
-        }
       </div>
     </motion.form>
   )

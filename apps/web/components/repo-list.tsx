@@ -6,11 +6,13 @@ import { Pause, Play, Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SiGithub } from "react-icons/si"
+import { RepoCard } from "./repo-card"
 
 type Repo = {
   id: string
   fullName: string
   active: boolean
+  trackedLabels: string[]
 }
 
 export function RepoList() {
@@ -50,64 +52,7 @@ export function RepoList() {
   return (
     <div className="space-y-4">
       {repos.map((repo, index) => (
-        <motion.div
-          key={repo.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.05 }}
-          className="group rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 backdrop-blur transition hover:border-zinc-700"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="rounded-xl border border-zinc-700 bg-black p-3">
-                <SiGithub className="h-5 w-5 text-white" />
-              </div>
-
-              <div>
-                <h3 className="font-medium text-white">
-                  {repo.fullName}
-                </h3>
-
-                <div className="mt-2 flex items-center gap-2">
-                  <Badge
-                    className={
-                      repo.active
-                        ? "bg-emerald-500/20 text-emerald-400"
-                        : "bg-yellow-500/20 text-yellow-400"
-                    }
-                  >
-                    {repo.active
-                      ? "Active"
-                      : "Paused"}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => toggleRepo(repo.id)}
-              >
-                {repo.active ? (
-                  <Pause className="h-4 w-4 text-yellow-400" />
-                ) : (
-                  <Play className="h-4 w-4 text-emerald-400" />
-                )}
-              </Button>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => deleteRepo(repo.id)}
-                className="opacity-0 transition group-hover:opacity-100"
-              >
-                <Trash2 className="h-4 w-4 text-red-400" />
-              </Button>
-            </div>
-          </div>
-        </motion.div>
+        <RepoCard repo={repo} fetchRepos={fetchRepos} key={repo.id}/>
       ))}
     </div>
   )
